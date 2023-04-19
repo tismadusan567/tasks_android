@@ -2,12 +2,17 @@ package com.example.mobilne2.model;
 
 import java.util.Date;
 
-public class Task {
+public class Task implements Comparable<Task> {
     private String title;
     private Date startTime;
     private Date endTime;
     private String description;
     private Priority priority;
+
+    @Override
+    public int compareTo(Task o) {
+        return this.startTime.compareTo(o.getStartTime());
+    }
 
     public static enum Priority {
         NONE,

@@ -14,12 +14,14 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class RecyclerViewModel extends ViewModel {
 
-    private final MutableLiveData<List<Task>> tasks = new MutableLiveData<>();
+    private final MutableLiveData<SortedSet<Task>> tasks = new MutableLiveData<>();
     private final MutableLiveData<Date> currentDay = new MutableLiveData<>();
-    private List<Task> allTasks = new ArrayList<>();
+    private SortedSet<Task> allTasks = new TreeSet<>();
 
     private final MutableLiveData<List<CalendarDate>> dates = new MutableLiveData<>();
     private final MutableLiveData<Date> currentMonth = new MutableLiveData<>();
@@ -39,8 +41,8 @@ public class RecyclerViewModel extends ViewModel {
         dates.setValue(listToSubmit);
         currentMonth.setValue(Calendar.getInstance().getTime());
 
-        ArrayList<Task> listToSubmit2 = new ArrayList<>(allTasks);
-        tasks.setValue(listToSubmit2);
+        TreeSet<Task> setToSubmit = new TreeSet<>(allTasks);
+        tasks.setValue(setToSubmit);
         currentDay.setValue(Calendar.getInstance().getTime());
     }
 
@@ -60,7 +62,7 @@ public class RecyclerViewModel extends ViewModel {
         calendarDate.addTask(newTask);
         tasks.getValue().add(newTask);
 
-        tasks.setValue(new ArrayList<>(tasks.getValue()));
+        tasks.setValue(new TreeSet<>(tasks.getValue()));
         dates.setValue(new ArrayList<>(dates.getValue()));
 
         return true;
@@ -87,7 +89,7 @@ public class RecyclerViewModel extends ViewModel {
         return null;
     }
 
-    public MutableLiveData<List<Task>> getTasks() {
+    public MutableLiveData<SortedSet<Task>> getTasks() {
         return tasks;
     }
 
@@ -109,7 +111,6 @@ public class RecyclerViewModel extends ViewModel {
                 return i;
             }
         }
-
         return -1;
     }
 }
