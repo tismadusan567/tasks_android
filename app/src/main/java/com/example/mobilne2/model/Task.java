@@ -32,6 +32,10 @@ public class Task implements Comparable<Task>, Serializable {
         this.priority = priority;
     }
 
+    public boolean intersects(Task other) {
+        return other.getStartTime().before(endTime) && other.getEndTime().after(startTime);
+    }
+
     public int getId() {
         return id;
     }

@@ -44,7 +44,7 @@ public class RecyclerViewModel extends ViewModel {
     private void initDummyData() {
         for (int i = 0; i <= 50; i++) {
             Task task = new Task(
-                    i,
+                    Database.getInstance().getUniqueId(),
                     Integer.toString(i),
                     new Date(Calendar.getInstance().getTime().getTime() + 1000L*3600*i*24),
                     new Date(Calendar.getInstance().getTime().getTime() + 1000L*3600*(i*24 + 1)),
@@ -52,7 +52,7 @@ public class RecyclerViewModel extends ViewModel {
                     i % 2 == 0 ? Task.Priority.HIGH : Task.Priority.LOW
             );
             Task task2 = new Task(
-                    -i,
+                    Database.getInstance().getUniqueId(),
                     "-" + i,
                     new Date(Calendar.getInstance().getTime().getTime() - 1000L*3600*i*24),
                     new Date(Calendar.getInstance().getTime().getTime() - 1000L*3600*(i*24 + 1)),

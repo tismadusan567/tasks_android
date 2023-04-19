@@ -79,7 +79,6 @@
         android:layout_margin="20dp"
         android:src="@drawable/ic_edit"
         android:contentDescription="Edit task"
-        android:text="Edit"
         android:layout_alignParentBottom="true"
         />
 

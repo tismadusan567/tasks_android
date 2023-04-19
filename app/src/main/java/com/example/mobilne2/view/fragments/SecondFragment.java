@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mobilne2.R;
 import com.example.mobilne2.model.Task;
 import com.example.mobilne2.view.BottomNavigationActivity;
+import com.example.mobilne2.view.EditTaskActivity;
 import com.example.mobilne2.view.TaskDetailActivity;
 import com.example.mobilne2.view.recycler.task.TaskAdapter;
 import com.example.mobilne2.view.recycler.task.TaskDiffItemCallback;
@@ -85,15 +86,9 @@ public class SecondFragment extends Fragment {
 
     private void initListeners() {
         addObligationBtn.setOnClickListener(v -> {
-            Task newTask = new Task(
-                    1568,
-                    "novi",
-                    new Date(Calendar.getInstance().getTime().getTime() + 1000*3600*20) ,
-                    new Date(Calendar.getInstance().getTime().getTime() + 1000*3600*21),
-                    "description",
-                    Task.Priority.LOW
-                    );
-            recyclerViewModel.addTask(newTask);
+            Intent intent = new Intent(requireActivity(), EditTaskActivity.class);
+            intent.putExtra("date", recyclerViewModel.getCurrentDay().getValue());
+            startActivity(intent);
         });
 
         //we want this predicate to be included at the start
@@ -174,7 +169,7 @@ public class SecondFragment extends Fragment {
 
     private void initRecycler() {
         taskAdapter = new TaskAdapter(new TaskDiffItemCallback(), task -> {
-            recyclerViewModel.getCurrentDay().setValue(new Date(Calendar.getInstance().getTime().getTime() + 3600L *1000*24*Integer.parseInt(task.getTitle())));
+            recyclerViewModel.getCurrentDay().setValue(task.getStartTime());
             Intent intent = new Intent(requireActivity(), TaskDetailActivity.class);
             intent.putExtra("task", task);
             startActivity(intent);

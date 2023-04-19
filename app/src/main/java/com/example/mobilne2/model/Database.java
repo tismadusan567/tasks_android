@@ -5,6 +5,9 @@ import java.util.TreeSet;
 
 public class Database {
 
+    private SortedSet<Task> allTasks = new TreeSet<>();
+    private int uniqueId = 0;
+
     private static Database instance;
 
     public static Database getInstance() {
@@ -18,7 +21,9 @@ public class Database {
 
     }
 
-    private SortedSet<Task> allTasks = new TreeSet<>();
+    public int getUniqueId() {
+        return uniqueId++;
+    }
 
     public void addTask(Task task) {
         allTasks.add(task);
