@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,7 +64,27 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
             String text = sdf.format(task.getStartTime()) + " - " + sdf.format(task.getEndTime());
             ((TextView) itemView.findViewById(R.id.task_time_interval)).setText(text);
             ((TextView) itemView.findViewById(R.id.task_name)).setText(task.getTitle());
+
+            View icon = itemView.findViewById(R.id.task_icon);
+
+            int colorId;
+            switch (task.getPriority()) {
+                case HIGH:
+                    colorId = R.color.red;
+                    break;
+                case MID:
+                    colorId = R.color.yellow;
+                    break;
+                case LOW:
+                    colorId = R.color.green;
+                    break;
+                default:
+                    colorId = R.color.white;
+                    break;
+            }
+            icon.setBackgroundColor(ContextCompat.getColor(context, colorId));
         }
 
     }
 }
+

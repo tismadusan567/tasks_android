@@ -66,13 +66,13 @@ public class CalendarDateAdapter extends ListAdapter<CalendarDate, CalendarDateA
             int colorId;
             switch (date.getPriority()) {
                 case HIGH:
-                    colorId = R.color.red;
+                    colorId = R.color.light_red;
                     break;
                 case MID:
-                    colorId = R.color.yellow;
+                    colorId = R.color.light_yellow;
                     break;
                 case LOW:
-                    colorId = R.color.green;
+                    colorId = R.color.light_green;
                     break;
                 default:
                     colorId = R.color.white;

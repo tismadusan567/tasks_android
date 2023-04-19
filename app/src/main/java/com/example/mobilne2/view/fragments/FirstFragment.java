@@ -20,6 +20,7 @@ import com.example.mobilne2.view.recycler.calendar.CalendarDateAdapter;
 import com.example.mobilne2.view.recycler.calendar.CalendarDateDiffItemCallback;
 import com.example.mobilne2.viewmodel.CalendarViewModel;
 import com.example.mobilne2.viewmodel.RecyclerViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class FirstFragment extends Fragment {
     private TextView calendarDateTextView;
     private RecyclerViewModel recyclerViewModel;
     private CalendarDateAdapter calendarDateAdapter;
+    private FloatingActionButton scrollToTodayBtn;
 
     public FirstFragment() {
         super(R.layout.fragment_first);
@@ -45,16 +47,11 @@ public class FirstFragment extends Fragment {
         init(view);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        recyclerView.scrollToPosition(recyclerViewModel.getTodayPosition());
-    }
-
     private void init(View view) {
         initView(view);
         initObservers();
         initRecycler();
+        initListeners();
 
         for (int i = 0; i <= 50; i++) {
             Task task = new Task(
@@ -80,6 +77,13 @@ public class FirstFragment extends Fragment {
     private void initView(View view) {
         calendarDateTextView = view.findViewById(R.id.calendarDateTextView);
         recyclerView = view.findViewById(R.id.calendarRecyclerView);
+        scrollToTodayBtn = view.findViewById(R.id.scrollToTodayBtn);
+    }
+
+    private void initListeners() {
+        scrollToTodayBtn.setOnClickListener(v -> {
+            recyclerView.scrollToPosition(recyclerViewModel.getTodayPosition());
+        });
     }
 
     private void initObservers() {

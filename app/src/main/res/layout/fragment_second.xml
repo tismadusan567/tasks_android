@@ -88,7 +88,7 @@
         android:id="@+id/floatingAddObligationBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="20dp"
         android:contentDescription="Add new obligation"
         android:src="@drawable/floating_add_btn"
         app:layout_constraintBottom_toBottomOf="@+id/listRv"

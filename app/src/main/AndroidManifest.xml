@@ -12,6 +12,7 @@
         android:theme="@style/Theme.Mobilne2"
         tools:targetApi="31">
         <activity android:name=".view.BottomNavigationActivity" />
+        <activity android:name=".view.TaskDetailActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

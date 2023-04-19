@@ -1,5 +1,6 @@
 package com.example.mobilne2.view.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobilne2.R;
 import com.example.mobilne2.model.Task;
+import com.example.mobilne2.view.BottomNavigationActivity;
+import com.example.mobilne2.view.TaskDetailActivity;
 import com.example.mobilne2.view.recycler.task.TaskAdapter;
 import com.example.mobilne2.view.recycler.task.TaskDiffItemCallback;
 import com.example.mobilne2.viewmodel.RecyclerViewModel;
@@ -91,7 +94,6 @@ public class SecondFragment extends Fragment {
                     );
             recyclerViewModel.addTask(newTask);
         });
-
 
         //we want this predicate to be included at the start
         recyclerViewModel.addPredicate(pastObligationsPredicate);
@@ -173,6 +175,8 @@ public class SecondFragment extends Fragment {
         taskAdapter = new TaskAdapter(new TaskDiffItemCallback(), task -> {
             Toast.makeText(getContext(), task.getTitle() + "", Toast.LENGTH_SHORT).show();
             recyclerViewModel.getCurrentDay().setValue(new Date(Calendar.getInstance().getTime().getTime() + 3600L *1000*24*Integer.parseInt(task.getTitle())));
+            Intent intent = new Intent(requireActivity(), TaskDetailActivity.class);
+            startActivity(intent);
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(taskAdapter);
