@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -24,6 +25,8 @@ public class RecyclerViewModel extends ViewModel {
     private final MutableLiveData<SortedSet<Task>> tasks = new MutableLiveData<>();
     private final MutableLiveData<Date> currentDay = new MutableLiveData<>();
     private SortedSet<Task> allTasks = new TreeSet<>();
+
+    private MutableLiveData<List<Task.Predicate>> predicates = new MutableLiveData<>();
 
     private final MutableLiveData<List<CalendarDate>> dates = new MutableLiveData<>();
     private final MutableLiveData<Date> currentMonth = new MutableLiveData<>();
@@ -46,6 +49,8 @@ public class RecyclerViewModel extends ViewModel {
         TreeSet<Task> setToSubmit = new TreeSet<>(allTasks);
         tasks.setValue(setToSubmit);
         currentDay.setValue(Calendar.getInstance().getTime());
+
+        predicates.setValue(new ArrayList<>());
     }
 
     public boolean addTask(Task newTask) {
@@ -70,10 +75,23 @@ public class RecyclerViewModel extends ViewModel {
         return true;
     }
 
-    public void filterTasksByPriority(List<Task.Priority> priorities) {
+    public void addPredicate(Task.Predicate predicate) {
+        predicates.getValue().add(predicate);
+        predicates.setValue(new ArrayList<>(predicates.getValue()));
+    }
+
+    public void removePredicate(Task.Predicate predicate) {
+        predicates.getValue().remove(predicate);
+        predicates.setValue(new ArrayList<>(predicates.getValue()));
+    }
+
+    public void filterTasksByPredicates() {
         SortedSet<Task> filteredSet = allTasks
                 .stream()
-                .filter(task -> priorities.contains(task.getPriority()))
+                .filter(task -> predicates.getValue()
+                        .stream()
+                        .allMatch(p -> p.satisfiesCondition(task))
+                )
                 .collect(Collectors.toCollection(TreeSet::new));
         tasks.setValue(filteredSet);
     }
@@ -113,6 +131,10 @@ public class RecyclerViewModel extends ViewModel {
 
     public MutableLiveData<Date> getCurrentMonth() {
         return currentMonth;
+    }
+
+    public MutableLiveData<List<Task.Predicate>> getPredicates() {
+        return predicates;
     }
 
     public int getTodayPosition() {

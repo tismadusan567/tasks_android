@@ -45,6 +45,11 @@ public class SecondFragment extends Fragment {
     private RecyclerViewModel recyclerViewModel;
     private TaskAdapter taskAdapter;
 
+    private Task.Predicate taskTitlePredicate;
+    private Task.Predicate priorityPredicate;
+    private Task.Predicate pastObligationsPredicate = t -> t.getEndTime().after(Calendar.getInstance().getTime());
+
+
 
     public SecondFragment() {
         super(R.layout.fragment_second);
@@ -87,8 +92,41 @@ public class SecondFragment extends Fragment {
             recyclerViewModel.addTask(newTask);
         });
 
+
+        //we want this predicate to be included at the start
+        recyclerViewModel.addPredicate(pastObligationsPredicate);
+        checkBox.setOnCheckedChangeListener((btn, isChecked) -> {
+            if (isChecked) {
+                recyclerViewModel.removePredicate(pastObligationsPredicate);
+            } else {
+                recyclerViewModel.addPredicate(pastObligationsPredicate);
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                recyclerViewModel.removePredicate(taskTitlePredicate);
+                taskTitlePredicate = task -> task.getTitle().toLowerCase(Locale.ROOT).startsWith(s);
+                recyclerViewModel.addPredicate(taskTitlePredicate);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                recyclerViewModel.removePredicate(taskTitlePredicate);
+                taskTitlePredicate = task -> task.getTitle().toLowerCase(Locale.ROOT).startsWith(s);
+                recyclerViewModel.addPredicate(taskTitlePredicate);
+                return true;
+            }
+        });
+
+        searchView.setOnCloseListener(() -> {
+            recyclerViewModel.removePredicate(taskTitlePredicate);
+            return false;
+        });
+
         lowBtn.setOnCheckedChangeListener((btn, isChecked) -> {
-            Log.d("lool", "kur");
             filterByPriority();
         });
 
@@ -102,6 +140,8 @@ public class SecondFragment extends Fragment {
     }
 
     private void filterByPriority() {
+        recyclerViewModel.removePredicate(priorityPredicate);
+
         List<Task.Priority> priorities = new ArrayList<>();
         if (lowBtn.isChecked()) priorities.add(Task.Priority.LOW);
         if (midBtn.isChecked()) priorities.add(Task.Priority.MID);
@@ -113,7 +153,9 @@ public class SecondFragment extends Fragment {
             priorities.add(Task.Priority.HIGH);
         }
 
-        recyclerViewModel.filterTasksByPriority(priorities);
+        priorityPredicate = t -> priorities.stream().anyMatch(priority -> t.getPriority().equals(priority));
+
+        recyclerViewModel.addPredicate(priorityPredicate);
     }
 
     private void initObservers() {

@@ -56,7 +56,7 @@ public class FirstFragment extends Fragment {
         initObservers();
         initRecycler();
 
-        for (int i = 0; i <= 1000; i++) {
+        for (int i = 0; i <= 50; i++) {
             Task task = new Task(
                     Integer.toString(i),
                     new Date(Calendar.getInstance().getTime().getTime() + 1000L*3600*i*24),
@@ -64,7 +64,16 @@ public class FirstFragment extends Fragment {
                     "description",
                     i % 2 == 0 ? Task.Priority.HIGH : Task.Priority.LOW
             );
+            Task task2 = new Task(
+                    "-" + i,
+                    new Date(Calendar.getInstance().getTime().getTime() - 1000L*3600*i*24),
+                    new Date(Calendar.getInstance().getTime().getTime() - 1000L*3600*(i*24 + 1)),
+                    "description",
+                    i % 2 == 0 ? Task.Priority.HIGH : Task.Priority.LOW
+            );
+
             recyclerViewModel.addTask(task);
+            recyclerViewModel.addTask(task2);
         }
     }
 

@@ -3,8 +3,10 @@ package com.example.mobilne2.view;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.mobilne2.viewmodel.RecyclerViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.example.mobilne2.R;
@@ -13,6 +15,7 @@ import com.example.mobilne2.view.viewpager.PagerAdapter;
 public class BottomNavigationActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
+    private RecyclerViewModel recyclerViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,11 @@ public class BottomNavigationActivity extends AppCompatActivity {
     private void init() {
         initViewPager();
         initNavigation();
+
+        recyclerViewModel = new ViewModelProvider(this).get(RecyclerViewModel.class);
+        recyclerViewModel.getPredicates().observe(this, predicates -> {
+            recyclerViewModel.filterTasksByPredicates();
+        });
     }
 
     private void initViewPager() {

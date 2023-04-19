@@ -14,7 +14,7 @@ public class Task implements Comparable<Task> {
         return this.startTime.compareTo(o.getStartTime());
     }
 
-    public static enum Priority {
+    public enum Priority {
         NONE,
         LOW,
         MID,
@@ -47,5 +47,9 @@ public class Task implements Comparable<Task> {
 
     public Priority getPriority() {
         return priority;
+    }
+
+    public interface Predicate {
+        boolean satisfiesCondition(Task task);
     }
 }
