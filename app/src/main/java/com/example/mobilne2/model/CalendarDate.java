@@ -10,33 +10,40 @@ public class CalendarDate {
     private Date date;
     private List<Task> tasks = new ArrayList<>();
     private Task.Priority priority = Task.Priority.NONE;
+    private boolean hasHigh = false;
+    private boolean hasMid = false;
+    private boolean hasLow = false;
     public CalendarDate(Date date) {
         this.date = date;
     }
 
     public void addTask(Task task) {
         tasks.add(task);
+
+        switch (task.getPriority()) {
+            case HIGH:
+                hasHigh = true;
+                break;
+            case MID:
+                hasMid = true;
+                break;
+            case LOW:
+                hasLow = true;
+                break;
+        }
+
         updatePriority();
     }
 
-    private void updatePriority() {
-        boolean hasHigh = false;
-        boolean hasMid = false;
-        boolean hasLow = false;
+    public void clear() {
+        tasks = new ArrayList<>();
+        priority = Task.Priority.NONE;
+        hasHigh = false;
+        hasMid = false;
+        hasLow = false;
+    }
 
-        for(Task task: tasks) {
-            switch (task.getPriority()) {
-                case HIGH:
-                    hasHigh = true;
-                    break;
-                case MID:
-                    hasMid = true;
-                    break;
-                case LOW:
-                    hasLow = true;
-                    break;
-            }
-        }
+    private void updatePriority() {
         if (hasHigh) priority = Task.Priority.HIGH;
         else if (hasMid) priority = Task.Priority.MID;
         else if (hasLow) priority = Task.Priority.LOW;

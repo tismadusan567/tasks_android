@@ -1,9 +1,11 @@
 package com.example.mobilne2.view;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStore;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mobilne2.viewmodel.RecyclerViewModel;
@@ -24,11 +26,19 @@ public class BottomNavigationActivity extends AppCompatActivity {
         init();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        Log.d("lool", "onResume");
+        recyclerViewModel.loadFromDatabase();
+    }
+
     private void init() {
         initViewPager();
         initNavigation();
 
         recyclerViewModel = new ViewModelProvider(this).get(RecyclerViewModel.class);
+
         recyclerViewModel.getPredicates().observe(this, predicates -> {
             recyclerViewModel.filterTasksByPredicates();
         });

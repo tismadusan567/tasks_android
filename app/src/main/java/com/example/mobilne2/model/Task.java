@@ -1,8 +1,10 @@
 package com.example.mobilne2.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Task implements Comparable<Task> {
+public class Task implements Comparable<Task>, Serializable {
+    private int id;
     private String title;
     private Date startTime;
     private Date endTime;
@@ -21,12 +23,17 @@ public class Task implements Comparable<Task> {
         HIGH
     }
 
-    public Task(String title, Date startTime, Date endTime, String description, Priority priority) {
+    public Task(int id, String title, Date startTime, Date endTime, String description, Priority priority) {
+        this.id = id;
         this.title = title;
         this.startTime = startTime;
         this.endTime = endTime;
         this.description = description;
         this.priority = priority;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {

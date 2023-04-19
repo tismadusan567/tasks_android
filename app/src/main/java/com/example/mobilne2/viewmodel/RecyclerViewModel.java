@@ -1,30 +1,29 @@
 package com.example.mobilne2.viewmodel;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.mobilne2.model.CalendarDate;
+import com.example.mobilne2.model.Database;
 import com.example.mobilne2.model.Task;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class RecyclerViewModel extends ViewModel {
 
+    public static final String STORE_KEY = "RecyclerViewModel";
+
     private final MutableLiveData<SortedSet<Task>> tasks = new MutableLiveData<>();
     private final MutableLiveData<Date> currentDay = new MutableLiveData<>();
-    private SortedSet<Task> allTasks = new TreeSet<>();
+//    private SortedSet<Task> allTasks = new TreeSet<>();
 
     private MutableLiveData<List<Task.Predicate>> predicates = new MutableLiveData<>();
 
@@ -33,6 +32,57 @@ public class RecyclerViewModel extends ViewModel {
     private List<CalendarDate> allDates = new ArrayList<>();
 
     public RecyclerViewModel() {
+        initDates();
+
+        initTasks();
+
+        initDummyData();
+
+        predicates.setValue(new ArrayList<>());
+    }
+
+    private void initDummyData() {
+        for (int i = 0; i <= 50; i++) {
+            Task task = new Task(
+                    i,
+                    Integer.toString(i),
+                    new Date(Calendar.getInstance().getTime().getTime() + 1000L*3600*i*24),
+                    new Date(Calendar.getInstance().getTime().getTime() + 1000L*3600*(i*24 + 1)),
+                    "description",
+                    i % 2 == 0 ? Task.Priority.HIGH : Task.Priority.LOW
+            );
+            Task task2 = new Task(
+                    -i,
+                    "-" + i,
+                    new Date(Calendar.getInstance().getTime().getTime() - 1000L*3600*i*24),
+                    new Date(Calendar.getInstance().getTime().getTime() - 1000L*3600*(i*24 + 1)),
+                    "description",
+                    i % 2 == 0 ? Task.Priority.HIGH : Task.Priority.LOW
+            );
+
+            addTask(task);
+            addTask(task2);
+        }
+    }
+
+    public void loadFromDatabase() {
+        allDates.forEach(CalendarDate::clear);
+
+        Database.getInstance().getAllTasks().stream().forEach(task -> {
+            CalendarDate calendarDate = findCalendarDateForDate(task.getStartTime());
+            calendarDate.addTask(task);
+        });
+
+        filterTasksByPredicates();
+    }
+
+    private void initTasks() {
+        TreeSet<Task> setToSubmit = new TreeSet<>(Database.getInstance().getAllTasks());
+        tasks.setValue(setToSubmit);
+        currentDay.setValue(Calendar.getInstance().getTime());
+    }
+
+    private void initDates() {
         //monday 5th january 2015
         Date firstDate = new GregorianCalendar(2015, Calendar.JANUARY, 5, 12, 0, 0).getTime();
         for (int i = 0; i <= 5000; i++) {
@@ -40,21 +90,14 @@ public class RecyclerViewModel extends ViewModel {
             allDates.add(date);
         }
         allDates.sort(Comparator.comparing(CalendarDate::getDate));
-        // We are doing this because cars.setValue in the background is first checking if the reference on the object is same
-        // and if it is it will not do notifyAll. By creating a new list, we get the new reference everytime
+
         ArrayList<CalendarDate> listToSubmit = new ArrayList<>(allDates);
         dates.setValue(listToSubmit);
         currentMonth.setValue(Calendar.getInstance().getTime());
-
-        TreeSet<Task> setToSubmit = new TreeSet<>(allTasks);
-        tasks.setValue(setToSubmit);
-        currentDay.setValue(Calendar.getInstance().getTime());
-
-        predicates.setValue(new ArrayList<>());
     }
 
     public boolean addTask(Task newTask) {
-        for (Task task: allTasks) {
+        for (Task task: Database.getInstance().getAllTasks()) {
              if (
                      newTask.getEndTime().after(task.getStartTime())
                      && newTask.getStartTime().before(task.getEndTime())
@@ -65,7 +108,7 @@ public class RecyclerViewModel extends ViewModel {
         CalendarDate calendarDate = findCalendarDateForDate(newTask.getStartTime());
         if (calendarDate == null) return false;
 
-        allTasks.add(newTask);
+        Database.getInstance().addTask(newTask);
         calendarDate.addTask(newTask);
         tasks.getValue().add(newTask);
 
@@ -86,7 +129,7 @@ public class RecyclerViewModel extends ViewModel {
     }
 
     public void filterTasksByPredicates() {
-        SortedSet<Task> filteredSet = allTasks
+        SortedSet<Task> filteredSet = Database.getInstance().getAllTasks()
                 .stream()
                 .filter(task -> predicates.getValue()
                         .stream()

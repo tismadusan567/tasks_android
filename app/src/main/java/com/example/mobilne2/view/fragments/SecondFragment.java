@@ -86,6 +86,7 @@ public class SecondFragment extends Fragment {
     private void initListeners() {
         addObligationBtn.setOnClickListener(v -> {
             Task newTask = new Task(
+                    1568,
                     "novi",
                     new Date(Calendar.getInstance().getTime().getTime() + 1000*3600*20) ,
                     new Date(Calendar.getInstance().getTime().getTime() + 1000*3600*21),
@@ -173,9 +174,9 @@ public class SecondFragment extends Fragment {
 
     private void initRecycler() {
         taskAdapter = new TaskAdapter(new TaskDiffItemCallback(), task -> {
-            Toast.makeText(getContext(), task.getTitle() + "", Toast.LENGTH_SHORT).show();
             recyclerViewModel.getCurrentDay().setValue(new Date(Calendar.getInstance().getTime().getTime() + 3600L *1000*24*Integer.parseInt(task.getTitle())));
             Intent intent = new Intent(requireActivity(), TaskDetailActivity.class);
+            intent.putExtra("task", task);
             startActivity(intent);
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

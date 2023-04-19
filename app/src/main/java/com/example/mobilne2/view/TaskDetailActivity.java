@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mobilne2.R;
+import com.example.mobilne2.model.Database;
 import com.example.mobilne2.model.Task;
 import com.example.mobilne2.view.viewpager.PagerAdapter;
 import com.example.mobilne2.view.viewpager.TaskDetailsPagerAdapter;
@@ -19,6 +20,7 @@ import java.util.List;
 public class TaskDetailActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
+    private Task task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,19 +30,25 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     private void init() {
+        task = (Task) getIntent().getExtras().get("task");
         initViewPager();
     }
 
     private void initViewPager() {
         viewPager = findViewById(R.id.detailsViewPager);
-        Task task = new Task("test", Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), "desc", Task.Priority.HIGH);
-        Task task2 = new Task("test2", Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), "desc", Task.Priority.MID);
-        Task task3 = new Task("test3", Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), "desc", Task.Priority.LOW);
-        List<Task> l = new ArrayList<>();
-        l.add(task);
-        l.add(task2);
-        l.add(task3);
-        viewPager.setAdapter(new TaskDetailsPagerAdapter(getSupportFragmentManager(), l));
+
+        List<Task> tasks = new ArrayList<>(Database.getInstance().getAllTasks());
+        int index = -1;
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).getId() == task.getId()) {
+                index = i;
+                break;
+            }
+        }
+        Log.d("lool", index + " " + task.getTitle());
+
+        viewPager.setAdapter(new TaskDetailsPagerAdapter(getSupportFragmentManager(), tasks));
+        viewPager.setCurrentItem(index);
     }
 
 }
