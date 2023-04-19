@@ -8,6 +8,7 @@ import android.widget.CheckBox;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class SecondFragment extends Fragment {
@@ -34,9 +36,9 @@ public class SecondFragment extends Fragment {
     private SearchView searchView;
     private TextView dateTextView;
     private CheckBox checkBox;
-    private Button lowBtn;
-    private Button midBtn;
-    private Button highBtn;
+    private ToggleButton lowBtn;
+    private ToggleButton midBtn;
+    private ToggleButton highBtn;
     private RecyclerView recyclerView;
     private FloatingActionButton addObligationBtn;
 
@@ -84,6 +86,34 @@ public class SecondFragment extends Fragment {
                     );
             recyclerViewModel.addTask(newTask);
         });
+
+        lowBtn.setOnCheckedChangeListener((btn, isChecked) -> {
+            Log.d("lool", "kur");
+            filterByPriority();
+        });
+
+        midBtn.setOnCheckedChangeListener((btn, isChecked) -> {
+            filterByPriority();
+        });
+
+        highBtn.setOnCheckedChangeListener((btn, isChecked) -> {
+            filterByPriority();
+        });
+    }
+
+    private void filterByPriority() {
+        List<Task.Priority> priorities = new ArrayList<>();
+        if (lowBtn.isChecked()) priorities.add(Task.Priority.LOW);
+        if (midBtn.isChecked()) priorities.add(Task.Priority.MID);
+        if (highBtn.isChecked()) priorities.add(Task.Priority.HIGH);
+
+        if (priorities.isEmpty()) {
+            priorities.add(Task.Priority.LOW);
+            priorities.add(Task.Priority.MID);
+            priorities.add(Task.Priority.HIGH);
+        }
+
+        recyclerViewModel.filterTasksByPriority(priorities);
     }
 
     private void initObservers() {

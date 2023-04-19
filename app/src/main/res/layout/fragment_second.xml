@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/recyclerMainLayout">
-<!--    tools:context=".view.activities.RecyclerActivity">-->
+    android:id="@+id/recyclerMainLayout"
+    tools:context=".view.fragments.SecondFragment">
 
     <TextView
         android:id="@+id/dateTextView"
@@ -40,26 +40,35 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/searchView">
 
-        <Button
+        <ToggleButton
             android:id="@+id/lowBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Low" />
+            android:background="@drawable/green_button_background"
+            android:textOn="LOW"
+            android:textOff="LOW"
+            />
 
-        <Button
+        <ToggleButton
             android:id="@+id/midBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Mid" />
+            android:background="@drawable/yellow_button_background"
+            android:textOn="MID"
+            android:textOff="MID"
+            />
 
-        <Button
+        <ToggleButton
             android:id="@+id/highBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="High" />
+            android:background="@drawable/red_button_background"
+            android:textOn="HIGH"
+            android:textOff="HIGH"
+            />
 
     </LinearLayout>
 
