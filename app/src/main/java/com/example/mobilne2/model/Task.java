@@ -10,6 +10,7 @@ public class Task {
     private Priority priority;
 
     public static enum Priority {
+        NONE,
         LOW,
         MID,
         HIGH

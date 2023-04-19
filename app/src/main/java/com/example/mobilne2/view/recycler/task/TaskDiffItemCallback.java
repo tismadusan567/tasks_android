@@ -10,7 +10,7 @@ public class TaskDiffItemCallback extends DiffUtil.ItemCallback<Task> {
     @Override
     public boolean areItemsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
         //TODO: promeni ovo
-        return oldItem.getTitle().equals(newItem.getTitle());
+        return oldItem == newItem;
     }
 
     @Override

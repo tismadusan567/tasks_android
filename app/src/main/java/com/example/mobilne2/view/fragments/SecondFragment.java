@@ -17,12 +17,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobilne2.R;
+import com.example.mobilne2.model.Task;
 import com.example.mobilne2.view.recycler.task.TaskAdapter;
 import com.example.mobilne2.view.recycler.task.TaskDiffItemCallback;
 import com.example.mobilne2.viewmodel.RecyclerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -57,6 +59,7 @@ public class SecondFragment extends Fragment {
         initView(view);
         initObservers();
         initRecycler();
+        initListeners();
     }
 
     private void initView(View view) {
@@ -70,9 +73,22 @@ public class SecondFragment extends Fragment {
         addObligationBtn = view.findViewById(R.id.floatingAddObligationBtn);
     }
 
+    private void initListeners() {
+        addObligationBtn.setOnClickListener(v -> {
+            Task newTask = new Task(
+                    "novi",
+                    new Date(Calendar.getInstance().getTime().getTime() + 1000*3600*20) ,
+                    new Date(Calendar.getInstance().getTime().getTime() + 1000*3600*21),
+                    "description",
+                    Task.Priority.LOW
+                    );
+            recyclerViewModel.addTask(newTask);
+        });
+    }
+
     private void initObservers() {
         recyclerViewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> {
-            taskAdapter.submitList(tasks);
+            taskAdapter.submitList(new ArrayList<>(tasks));
         });
 
         recyclerViewModel.getCurrentDay().observe(getViewLifecycleOwner(), day -> {

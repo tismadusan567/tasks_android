@@ -4,11 +4,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.mobilne2.model.CalendarDate;
 import com.example.mobilne2.model.Task;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class RecyclerViewModel extends ViewModel {
@@ -17,23 +21,95 @@ public class RecyclerViewModel extends ViewModel {
     private final MutableLiveData<Date> currentDay = new MutableLiveData<>();
     private List<Task> allTasks = new ArrayList<>();
 
+    private final MutableLiveData<List<CalendarDate>> dates = new MutableLiveData<>();
+    private final MutableLiveData<Date> currentMonth = new MutableLiveData<>();
+    private List<CalendarDate> allDates = new ArrayList<>();
+
     public RecyclerViewModel() {
-        for (int i = 0; i <= 100; i++) {
-            Task car = new Task(Integer.toString(i), Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), "description", Task.Priority.HIGH);
-            allTasks.add(car);
+        //monday 5th january 2015
+        Date firstDate = new GregorianCalendar(2015, Calendar.JANUARY, 5, 12, 0, 0).getTime();
+        for (int i = 0; i <= 5000; i++) {
+            CalendarDate date = new CalendarDate(new Date(firstDate.getTime() + (long) i *3600*1000*24));
+            allDates.add(date);
         }
+        allDates.sort(Comparator.comparing(CalendarDate::getDate));
         // We are doing this because cars.setValue in the background is first checking if the reference on the object is same
         // and if it is it will not do notifyAll. By creating a new list, we get the new reference everytime
-        ArrayList<Task> listToSubmit = new ArrayList<>(allTasks);
-        tasks.setValue(listToSubmit);
+        ArrayList<CalendarDate> listToSubmit = new ArrayList<>(allDates);
+        dates.setValue(listToSubmit);
+        currentMonth.setValue(Calendar.getInstance().getTime());
+
+        ArrayList<Task> listToSubmit2 = new ArrayList<>(allTasks);
+        tasks.setValue(listToSubmit2);
         currentDay.setValue(Calendar.getInstance().getTime());
     }
 
-    public LiveData<List<Task>> getTasks() {
+    public boolean addTask(Task newTask) {
+        for (Task task: allTasks) {
+             if (
+                     newTask.getEndTime().after(task.getStartTime())
+                     && newTask.getStartTime().before(task.getEndTime())
+             ) {
+                 return false;
+             }
+        }
+        CalendarDate calendarDate = findCalendarDateForDate(newTask.getStartTime());
+        if (calendarDate == null) return false;
+
+        allTasks.add(newTask);
+        calendarDate.addTask(newTask);
+        tasks.getValue().add(newTask);
+
+        tasks.setValue(new ArrayList<>(tasks.getValue()));
+        dates.setValue(new ArrayList<>(dates.getValue()));
+
+        return true;
+    }
+
+    private boolean isSameDay(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
+                && cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+    }
+
+    private CalendarDate findCalendarDateForDate(Date date) {
+        for (CalendarDate calendarDate: allDates) {
+            if (isSameDay(date, calendarDate.getDate())) {
+                return calendarDate;
+            }
+        }
+        return null;
+    }
+
+    public MutableLiveData<List<Task>> getTasks() {
         return tasks;
     }
 
     public MutableLiveData<Date> getCurrentDay() {
         return currentDay;
+    }
+
+    public MutableLiveData<List<CalendarDate>> getDates() {
+        return dates;
+    }
+
+    public MutableLiveData<Date> getCurrentMonth() {
+        return currentMonth;
+    }
+
+    public int getTodayPosition() {
+        for (int i=0;i<dates.getValue().size();i++) {
+            if (isSameDay(dates.getValue().get(i).getDate(), Calendar.getInstance().getTime())) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }
