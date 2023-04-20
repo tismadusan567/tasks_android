@@ -1,5 +1,7 @@
 package com.example.mobilne2.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -129,6 +131,7 @@ public class RecyclerViewModel extends ViewModel {
     }
 
     public void filterTasksByPredicates() {
+        Log.d("lool", "filt");
         SortedSet<Task> filteredSet = Database.getInstance().getAllTasks()
                 .stream()
                 .filter(task -> predicates.getValue()

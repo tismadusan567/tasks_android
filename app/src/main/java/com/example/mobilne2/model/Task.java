@@ -2,6 +2,7 @@ package com.example.mobilne2.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 public class Task implements Comparable<Task>, Serializable {
     private int id;
@@ -10,6 +11,7 @@ public class Task implements Comparable<Task>, Serializable {
     private Date endTime;
     private String description;
     private Priority priority;
+    private transient boolean dirty = false;
 
     @Override
     public int compareTo(Task o) {
@@ -60,7 +62,48 @@ public class Task implements Comparable<Task>, Serializable {
         return priority;
     }
 
+    public boolean isDirty() {
+        return dirty;
+    }
+
     public interface Predicate {
         boolean satisfiesCondition(Task task);
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public void setDirty(boolean dirty) {
+        this.dirty = dirty;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id && Objects.equals(title, task.title) && Objects.equals(startTime, task.startTime) && Objects.equals(endTime, task.endTime) && Objects.equals(description, task.description) && priority == task.priority;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, startTime, endTime, description, priority);
     }
 }

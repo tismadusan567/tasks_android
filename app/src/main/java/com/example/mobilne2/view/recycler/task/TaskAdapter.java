@@ -1,9 +1,12 @@
 package com.example.mobilne2.view.recycler.task;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobilne2.R;
 import com.example.mobilne2.model.Task;
+import com.example.mobilne2.view.EditTaskActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -83,6 +87,13 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
                     break;
             }
             icon.setBackgroundColor(ContextCompat.getColor(context, colorId));
+
+            ImageButton button = itemView.findViewById(R.id.edit_button);
+            button.setOnClickListener(v -> {
+                Intent intent = new Intent(context, EditTaskActivity.class);
+                intent.putExtra("edit_task", task);
+                context.startActivity(intent);
+            });
         }
 
     }

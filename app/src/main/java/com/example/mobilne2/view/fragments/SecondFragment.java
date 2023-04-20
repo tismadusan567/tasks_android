@@ -2,13 +2,10 @@ package com.example.mobilne2.view.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -20,8 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobilne2.R;
 import com.example.mobilne2.model.Task;
-import com.example.mobilne2.view.BottomNavigationActivity;
-import com.example.mobilne2.view.EditTaskActivity;
+import com.example.mobilne2.view.AddTaskActivity;
 import com.example.mobilne2.view.TaskDetailActivity;
 import com.example.mobilne2.view.recycler.task.TaskAdapter;
 import com.example.mobilne2.view.recycler.task.TaskDiffItemCallback;
@@ -31,7 +27,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -86,7 +81,7 @@ public class SecondFragment extends Fragment {
 
     private void initListeners() {
         addObligationBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(requireActivity(), EditTaskActivity.class);
+            Intent intent = new Intent(requireActivity(), AddTaskActivity.class);
             intent.putExtra("date", recyclerViewModel.getCurrentDay().getValue());
             startActivity(intent);
         });

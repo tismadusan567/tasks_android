@@ -10,12 +10,17 @@ public class TaskDiffItemCallback extends DiffUtil.ItemCallback<Task> {
     @Override
     public boolean areItemsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
         //TODO: promeni ovo
-        return oldItem == newItem;
+        return oldItem.getId() == newItem.getId();
     }
 
     @Override
     public boolean areContentsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
-        return oldItem.getTitle().equals(newItem.getTitle())
+        if (newItem.isDirty()) {
+            newItem.setDirty(false);
+            return false;
+        }
+        return oldItem.getId() == newItem.getId()
+                && oldItem.getTitle().equals(newItem.getTitle())
                 && oldItem.getStartTime().equals(newItem.getStartTime())
                 && oldItem.getEndTime().equals(newItem.getEndTime())
                 && oldItem.getDescription().equals(newItem.getDescription())

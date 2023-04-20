@@ -1,5 +1,7 @@
 package com.example.mobilne2.view.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mobilne2.R;
 import com.example.mobilne2.model.Task;
+import com.example.mobilne2.view.EditTaskActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
@@ -37,6 +40,12 @@ public class TaskDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         init(view);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fillView();
     }
 
     private void init(View view) {
@@ -68,7 +77,9 @@ public class TaskDetailsFragment extends Fragment {
 
     private void initListeners() {
         editBtn.setOnClickListener(v -> {
-            Log.d("lool", task.getTitle());
+            Intent intent = new Intent(requireContext(), EditTaskActivity.class);
+            intent.putExtra("edit_task", task);
+            startActivity(intent);
         });
     }
 }

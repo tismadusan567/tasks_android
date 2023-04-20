@@ -29,6 +29,10 @@ public class Database {
         allTasks.add(task);
     }
 
+    public void removeTask(Task task) {
+        allTasks.remove(task);
+    }
+
     public SortedSet<Task> getAllTasks() {
         return allTasks;
     }

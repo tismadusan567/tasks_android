@@ -20,9 +20,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class EditTaskActivity extends AppCompatActivity {
+public class AddTaskActivity extends AppCompatActivity {
 
     private TextView dateTextView;
     private Button startTimeBtn;
@@ -34,9 +33,9 @@ public class EditTaskActivity extends AppCompatActivity {
     private ToggleButton lowBtn;
     private ToggleButton midBtn;
     private ToggleButton highBtn;
-    private Task task;
-    private Date startTime;
-    private Date endTime;
+    private Date date;
+    private Date startTime = null;
+    private Date endTime = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,46 +45,25 @@ public class EditTaskActivity extends AppCompatActivity {
     }
 
     private void init() {
-        Task taskCopy = (Task) getIntent().getExtras().get("edit_task");
-
-        Database.getInstance().getAllTasks().forEach(t -> {
-            if (t.getId() == taskCopy.getId()) {
-                task = t;
-            }
-        });
-
-        startTime = task.getStartTime();
-        endTime = task.getEndTime();
+        date = (Date) getIntent().getExtras().get("date");
 
         initView();
         initListeners();
-        fillView();
-    }
 
-    private void fillView() {
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd. yyyy.", Locale.US);
-        dateTextView.setText(sdf.format(task.getStartTime()));
-
-        if (task.getPriority() == Task.Priority.HIGH) highBtn.setChecked(true);
-        if (task.getPriority() == Task.Priority.MID) midBtn.setChecked(true);
-        if (task.getPriority() == Task.Priority.LOW) lowBtn.setChecked(true);
-
-        titleTextView.setText(task.getTitle());
-        descTextView.setText(task.getDescription());
-
+        dateTextView.setText(sdf.format(date));
     }
 
     private void initListeners() {
         startTimeBtn.setOnClickListener(v -> {
             final Calendar c = Calendar.getInstance();
-            c.setTime(task.getStartTime());
 
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
 
-            TimePickerDialog timePickerDialog = new TimePickerDialog(EditTaskActivity.this,
+            TimePickerDialog timePickerDialog = new TimePickerDialog(AddTaskActivity.this,
                     (view, hourOfDay, minute1) -> {
-                        c.setTime(task.getStartTime());
+                        c.setTime(date);
                         c.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         c.set(Calendar.MINUTE, minute1);
                         startTime = c.getTime();
@@ -96,14 +74,13 @@ public class EditTaskActivity extends AppCompatActivity {
 
         endTimeBtn.setOnClickListener(v -> {
             final Calendar c = Calendar.getInstance();
-            c.setTime(task.getEndTime());
 
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
 
-            TimePickerDialog timePickerDialog = new TimePickerDialog(EditTaskActivity.this,
+            TimePickerDialog timePickerDialog = new TimePickerDialog(AddTaskActivity.this,
                     (view, hourOfDay, minute1) -> {
-                        c.setTime(task.getEndTime());
+                        c.setTime(date);
                         c.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         c.set(Calendar.MINUTE, minute1);
                         endTime = c.getTime();
@@ -145,7 +122,7 @@ public class EditTaskActivity extends AppCompatActivity {
             else if (midBtn.isChecked()) priority = Task.Priority.MID;
             else if (lowBtn.isChecked()) priority = Task.Priority.LOW;
 
-            Task dummyTask = new Task(
+            Task newTask = new Task(
                     Database.getInstance().getUniqueId(),
                     titleTextView.getText().toString(),
                     startTime,
@@ -156,8 +133,8 @@ public class EditTaskActivity extends AppCompatActivity {
 
             Set<Task> tasks = Database.getInstance().getAllTasks();
             AtomicBoolean timeslotTaken = new AtomicBoolean(false);
-            tasks.forEach(t -> {
-                if (t != task && t.intersects(dummyTask)) {
+            tasks.forEach(task -> {
+                if (task.intersects(newTask)) {
                     timeslotTaken.set(true);
                 }
             });
@@ -167,12 +144,7 @@ public class EditTaskActivity extends AppCompatActivity {
                 return;
             }
 
-            task.setTitle(titleTextView.getText().toString());
-            task.setDescription(descTextView.getText().toString());
-            task.setStartTime(startTime);
-            task.setEndTime(endTime);
-            task.setPriority(priority);
-            task.setDirty(true);
+            Database.getInstance().addTask(newTask);
 
             finish();
         });
@@ -191,4 +163,3 @@ public class EditTaskActivity extends AppCompatActivity {
         cancelBtn = findViewById(R.id.cancelBtn);
     }
 }
-
