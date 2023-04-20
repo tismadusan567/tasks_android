@@ -114,5 +114,19 @@ public class FirstFragment extends Fragment {
         });
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
         recyclerView.setAdapter(calendarDateAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null) {
+                    int firstVisibleItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+                    if (calendarDateAdapter != null && calendarDateAdapter.getItemCount() > 0) {
+                        CalendarDate firstItem = calendarDateAdapter.getDate(firstVisibleItemPosition);
+                        recyclerViewModel.getCurrentMonth().setValue(firstItem.getDate());
+                    }
+                }
+            }
+        });
     }
 }

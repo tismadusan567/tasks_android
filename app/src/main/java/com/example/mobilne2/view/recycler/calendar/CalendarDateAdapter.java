@@ -27,6 +27,10 @@ public class CalendarDateAdapter extends ListAdapter<CalendarDate, CalendarDateA
         this.onDateClicked = onDateClicked;
     }
 
+    public CalendarDate getDate(int pos) {
+        return getItem(pos);
+    }
+
     @NonNull
     @Override
     public CalendarDateAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
