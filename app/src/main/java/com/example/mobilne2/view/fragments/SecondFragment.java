@@ -2,6 +2,7 @@ package com.example.mobilne2.view.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.SearchView;
@@ -27,6 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,9 +48,22 @@ public class SecondFragment extends Fragment {
 
     private Task.Predicate taskTitlePredicate;
     private Task.Predicate priorityPredicate;
-    private Task.Predicate pastObligationsPredicate = t -> t.getEndTime().after(Calendar.getInstance().getTime());
+    private final Task.Predicate pastObligationsPredicate = t -> t.getEndTime().after(Calendar.getInstance().getTime());
+    private final Task.Predicate currentDayPredicate = t -> {
+        Calendar c = Calendar.getInstance();
+        c.setTime(t.getStartTime());
 
+        Calendar c2 = Calendar.getInstance();
+        c2.setTime(recyclerViewModel.getCurrentDay().getValue());
+//        Log.d("lool", c.getTime() + " " + c2.getTime());
+//        Log.d("lool", c.get(Calendar.DAY_OF_MONTH) + " " + c2.get(Calendar.DAY_OF_MONTH));
+//        Log.d("lool", c.get(Calendar.MONTH) + " " + c2.get(Calendar.MONTH));
+//        Log.d("lool", c.get(Calendar.YEAR) + " " + c2.get(Calendar.YEAR));
 
+        return c.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH)
+                && c.get(Calendar.MONTH) == c2.get(Calendar.MONTH)
+                && c.get(Calendar.YEAR) == c2.get(Calendar.YEAR);
+    };
 
     public SecondFragment() {
         super(R.layout.fragment_second);
@@ -88,6 +103,8 @@ public class SecondFragment extends Fragment {
 
         //we want this predicate to be included at the start
         recyclerViewModel.addPredicate(pastObligationsPredicate);
+        recyclerViewModel.addPredicate(currentDayPredicate);
+
         checkBox.setOnCheckedChangeListener((btn, isChecked) -> {
             if (isChecked) {
                 recyclerViewModel.removePredicate(pastObligationsPredicate);
@@ -159,12 +176,13 @@ public class SecondFragment extends Fragment {
         recyclerViewModel.getCurrentDay().observe(getViewLifecycleOwner(), day -> {
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
             dateTextView.setText(sdf.format(day));
+            recyclerViewModel.filterTasksByPredicates();
         });
     }
 
     private void initRecycler() {
         taskAdapter = new TaskAdapter(new TaskDiffItemCallback(), task -> {
-            recyclerViewModel.getCurrentDay().setValue(task.getStartTime());
+//            recyclerViewModel.getCurrentDay().setValue(task.getStartTime());
             Intent intent = new Intent(requireActivity(), TaskDetailActivity.class);
             intent.putExtra("task", task);
             startActivity(intent);

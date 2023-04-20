@@ -12,14 +12,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.mobilne2.R;
 import com.example.mobilne2.model.CalendarDate;
 import com.example.mobilne2.model.Task;
+import com.example.mobilne2.view.BottomNavigationActivity;
 import com.example.mobilne2.view.recycler.calendar.CalendarDateAdapter;
 import com.example.mobilne2.view.recycler.calendar.CalendarDateDiffItemCallback;
+import com.example.mobilne2.view.viewpager.PagerAdapter;
 import com.example.mobilne2.viewmodel.CalendarViewModel;
 import com.example.mobilne2.viewmodel.RecyclerViewModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
@@ -85,8 +89,28 @@ public class FirstFragment extends Fragment {
 
     private void initRecycler() {
         calendarDateAdapter = new CalendarDateAdapter(new CalendarDateDiffItemCallback(), date -> {
-            Toast.makeText(getContext(), date.getDate() + "\n" + date.getPriority(), Toast.LENGTH_SHORT).show();
             recyclerViewModel.getCurrentMonth().setValue(date.getDate());
+            recyclerViewModel.getCurrentDay().setValue(date.getDate());
+
+            BottomNavigationView b =  ((BottomNavigationView)requireActivity().findViewById(R.id.bottomNavigation));
+
+            ViewPager viewPager = requireActivity().findViewById(R.id.viewPager);
+
+            b.setOnItemSelectedListener(null);
+            b.setSelectedItemId(R.id.navigation_2);
+            viewPager.setCurrentItem(PagerAdapter.FRAGMENT_2, true);
+            b.setOnItemSelectedListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.navigation_1: viewPager.setCurrentItem(PagerAdapter.FRAGMENT_1, false); break;
+                    case R.id.navigation_2:
+                        recyclerViewModel.getCurrentDay().setValue(Calendar.getInstance().getTime());
+                        viewPager.setCurrentItem(PagerAdapter.FRAGMENT_2, false);
+                        break;
+                    case R.id.navigation_3: viewPager.setCurrentItem(PagerAdapter.FRAGMENT_3, false); break;
+                }
+                return true;
+            });
+
         });
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
         recyclerView.setAdapter(calendarDateAdapter);

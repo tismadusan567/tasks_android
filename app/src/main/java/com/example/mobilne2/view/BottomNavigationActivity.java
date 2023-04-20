@@ -15,6 +15,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.example.mobilne2.R;
 import com.example.mobilne2.view.viewpager.PagerAdapter;
 
+import java.util.Calendar;
+
 public class BottomNavigationActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
@@ -56,9 +58,11 @@ public class BottomNavigationActivity extends AppCompatActivity {
     private void initNavigation() {
         ((BottomNavigationView)findViewById(R.id.bottomNavigation)).setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
-                // setCurrentItem metoda viewPager samo obavesti koji je Item trenutno aktivan i onda metoda getItem u adapteru setuje odredjeni fragment za tu poziciju
                 case R.id.navigation_1: viewPager.setCurrentItem(PagerAdapter.FRAGMENT_1, false); break;
-                case R.id.navigation_2: viewPager.setCurrentItem(PagerAdapter.FRAGMENT_2, false); break;
+                case R.id.navigation_2:
+                    recyclerViewModel.getCurrentDay().setValue(Calendar.getInstance().getTime());
+                    viewPager.setCurrentItem(PagerAdapter.FRAGMENT_2, false);
+                    break;
                 case R.id.navigation_3: viewPager.setCurrentItem(PagerAdapter.FRAGMENT_3, false); break;
             }
             return true;

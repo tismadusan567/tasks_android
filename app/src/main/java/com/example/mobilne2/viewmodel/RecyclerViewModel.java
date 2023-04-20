@@ -26,7 +26,6 @@ public class RecyclerViewModel extends ViewModel {
 
     private final MutableLiveData<SortedSet<Task>> tasks = new MutableLiveData<>();
     private final MutableLiveData<Date> currentDay = new MutableLiveData<>();
-//    private SortedSet<Task> allTasks = new TreeSet<>();
 
     private MutableLiveData<List<Task.Predicate>> predicates = new MutableLiveData<>();
 
@@ -134,7 +133,6 @@ public class RecyclerViewModel extends ViewModel {
     }
 
     public void filterTasksByPredicates() {
-        Log.d("lool", "filt");
         SortedSet<Task> filteredSet = Database.getInstance().getAllTasks()
                 .stream()
                 .filter(task -> predicates.getValue()
