@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStore;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.mobilne2.model.User;
 import com.example.mobilne2.viewmodel.RecyclerViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -29,7 +30,6 @@ public class BottomNavigationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        Log.d("lool", "onResume");
         recyclerViewModel.loadFromDatabase();
     }
 
@@ -42,6 +42,10 @@ public class BottomNavigationActivity extends AppCompatActivity {
         recyclerViewModel.getPredicates().observe(this, predicates -> {
             recyclerViewModel.filterTasksByPredicates();
         });
+
+        User user = (User) getIntent().getExtras().get("user");
+        recyclerViewModel.getUser().setValue(user);
+
     }
 
     private void initViewPager() {

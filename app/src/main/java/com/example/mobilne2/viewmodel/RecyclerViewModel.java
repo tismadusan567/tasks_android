@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.mobilne2.model.CalendarDate;
 import com.example.mobilne2.model.Database;
 import com.example.mobilne2.model.Task;
+import com.example.mobilne2.model.User;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,6 +33,8 @@ public class RecyclerViewModel extends ViewModel {
     private final MutableLiveData<List<CalendarDate>> dates = new MutableLiveData<>();
     private final MutableLiveData<Date> currentMonth = new MutableLiveData<>();
     private List<CalendarDate> allDates = new ArrayList<>();
+
+    private final MutableLiveData<User> user = new MutableLiveData<>();
 
     public RecyclerViewModel() {
         initDates();
@@ -190,5 +193,9 @@ public class RecyclerViewModel extends ViewModel {
             }
         }
         return -1;
+    }
+
+    public MutableLiveData<User> getUser() {
+        return user;
     }
 }

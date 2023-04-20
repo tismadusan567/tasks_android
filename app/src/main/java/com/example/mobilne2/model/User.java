@@ -1,5 +1,7 @@
 package com.example.mobilne2.model;
 
+import android.util.Log;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,7 +10,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    public static final String KEY = "user";
+    public static final String USERNAME = "user";
+    public static final String PASSWORD = "password";
+    public static final String EMAIL = "email";
+    public static final String LOGGEDIN = "loggedin";
     private String username;
     private String password;
     private String email;
@@ -21,24 +26,39 @@ public class User implements Serializable {
         this.loggedIn = loggedIn;
     }
 
-    public byte[] toByteArray() throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(this);
-        oos.flush();
-        byte[] bytes = bos.toByteArray();
-        bos.close();
-        oos.close();
-        return bytes;
+    public static boolean checkPassword(String password) {
+        int chars = 0;
+        int digits = 0;
+        int capitals = 0;
+
+        for(char c : password.toCharArray()) {
+            if(c >= '0' && c <= '9') {
+                digits++;
+            }
+            else if(c >= 'A' && c <= 'Z') {
+                chars++;
+                capitals++;
+            }
+            else if(c>='a' && c <= 'z') {
+                chars++;
+            }
+            else {
+                return false;
+            }
+        }
+
+        return chars >= 5 && capitals >= 1 && digits >= 1;
     }
 
-    public static Object toObject(byte[] bytes) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-        ObjectInputStream ois = new ObjectInputStream(bis);
-        Object obj = ois.readObject();
-        bis.close();
-        ois.close();
-        return obj;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", loggedIn=" + loggedIn +
+                '}';
     }
 
     public String getUsername() {

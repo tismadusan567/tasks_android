@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.example.mobilne2.model.User;
 import com.example.mobilne2.view.BottomNavigationActivity;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -56,13 +58,24 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            InputStream inputStream = getResources().openRawResource(R.raw.password);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String savedPassword;
+            String savedPassword = "";
+
             try {
-                savedPassword = reader.readLine();
+                InputStream inputStream = openFileInput("password.txt");
+
+                if ( inputStream != null ) {
+                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                    savedPassword = bufferedReader.readLine();
+
+                    inputStream.close();
+                }
+            }
+            catch (FileNotFoundException e) {
+                Log.e("login activity", "File not found: " + e.toString());
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                Log.e("login activity", "Can not read file: " + e.toString());
             }
 
             if (!savedPassword.equals(passwordET.getText().toString())) {
@@ -72,6 +85,14 @@ public class MainActivity extends AppCompatActivity {
 
             SharedPreferences sharedPreferences = getSharedPreferences("dnevnjak", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putString(User.USERNAME,  usernameET.getText().toString());
+            editor.putString(User.PASSWORD, passwordET.getText().toString());
+            editor.putString(User.EMAIL, emailET.getText().toString());
+            editor.putBoolean(User.LOGGEDIN, true);
+
+            editor.apply();
+
             User user = new User(
                     usernameET.getText().toString(),
                     passwordET.getText().toString(),
@@ -79,18 +100,8 @@ public class MainActivity extends AppCompatActivity {
                     true
             );
 
-            String encodedUser = null;
-            try {
-                encodedUser = Base64.encodeToString(user.toByteArray(), Base64.DEFAULT);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            editor.putString(User.KEY, encodedUser);
-
-            editor.apply();
-
-
             Intent intent = new Intent(this, BottomNavigationActivity.class);
+            intent.putExtra("user", user);
             startActivity(intent);
         }));
     }
