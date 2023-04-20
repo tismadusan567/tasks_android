@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Mobilne2</string>
+    <string name="email">Mejl</string>
+    <string name="username">Korisničko ime</string>
+    <string name="password">Šifra</string>
+    <string name="login">PPrijava</string>
+    <string name="low">NIZAK</string>
+    <string name="mid">SREDNJI</string>
+    <string name="high">VISOK</string>
+    <string name="pick_start_time">Odaberite početno vreme</string>
+    <string name="pick_end_time">Odaberite završno vreme</string>
+    <string name="title">Naslov</string>
+    <string name="description">Opis</string>
+    <string name="edit_task">Izmena obaveze</string>
+    <string name="delete_task">Brisanje obaveze</string>
+    <string name="old_password">Stara šifra</string>
+    <string name="new_password">Nova šifra</string>
+    <string name="confirm_password">Potvrdite šifru</string>
+    <string name="cancel">Otkazati</string>
+    <string name="confirm">Potvrda</string>
+    <string name="date">DATUM</string>
+    <string name="mon">Pon.</string>
+    <string name="tue">Uto.</string>
+    <string name="wed">Sre.</string>
+    <string name="thu">Čet.</string>
+    <string name="fri">Pet.</string>
+    <string name="sat">Sub.</string>
+    <string name="sun">Ned.</string>
+    <string name="scroll_to_today_s_date">Idi na današnji datum</string>
+    <string name="show_past_obligations">Prethodne obaveze</string>
+    <string name="change_password">Promena šifre</string>
+    <string name="log_out">Odjava</string>
+</resources>
