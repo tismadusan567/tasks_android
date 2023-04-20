@@ -12,9 +12,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.mobilne2.R;
+import com.example.mobilne2.model.Database;
 import com.example.mobilne2.model.Task;
 import com.example.mobilne2.view.EditTaskActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -80,6 +82,16 @@ public class TaskDetailsFragment extends Fragment {
             Intent intent = new Intent(requireContext(), EditTaskActivity.class);
             intent.putExtra("edit_task", task);
             startActivity(intent);
+        });
+
+        deleteBtn.setOnClickListener(v -> {
+            Snackbar.make(v, "Are you sure you want to delete this item?", Snackbar.LENGTH_LONG)
+                    .setAction("Yes", v1 -> {
+                        Database.getInstance().removeTask(task);
+                        requireActivity().finish();
+                    })
+                    .show();
+
         });
     }
 }

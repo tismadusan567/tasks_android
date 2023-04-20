@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -16,8 +15,11 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobilne2.R;
+import com.example.mobilne2.model.Database;
 import com.example.mobilne2.model.Task;
 import com.example.mobilne2.view.EditTaskActivity;
+import com.example.mobilne2.viewmodel.RecyclerViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -26,10 +28,12 @@ import java.util.function.Consumer;
 public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
 
     private final Consumer<Task> onTaskClicked;
+    private final RecyclerViewModel recyclerViewModel;
 
-    public TaskAdapter(@NonNull DiffUtil.ItemCallback<Task> diffCallback, Consumer<Task> onTaskClicked) {
+    public TaskAdapter(@NonNull DiffUtil.ItemCallback<Task> diffCallback, Consumer<Task> onTaskClicked, RecyclerViewModel recyclerViewModel) {
         super(diffCallback);
         this.onTaskClicked = onTaskClicked;
+        this.recyclerViewModel = recyclerViewModel;
     }
 
     @NonNull
@@ -39,7 +43,7 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
         return new ViewHolder(view, parent.getContext(), position -> {
             Task task = getItem(position);
             onTaskClicked.accept(task);
-        });
+        }, recyclerViewModel);
     }
 
     @Override
@@ -52,10 +56,12 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final Context context;
+        private final RecyclerViewModel recyclerViewModel;
 
-        public ViewHolder(@NonNull View itemView, Context context, Consumer<Integer> onItemClicked) {
+        public ViewHolder(@NonNull View itemView, Context context, Consumer<Integer> onItemClicked, RecyclerViewModel recyclerViewModel) {
             super(itemView);
             this.context = context;
+            this.recyclerViewModel = recyclerViewModel;
             itemView.setOnClickListener(v -> {
                 if (getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
                     onItemClicked.accept(getBindingAdapterPosition());
@@ -93,6 +99,16 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
                 Intent intent = new Intent(context, EditTaskActivity.class);
                 intent.putExtra("edit_task", task);
                 context.startActivity(intent);
+            });
+
+            ImageButton delBtn = itemView.findViewById(R.id.delete_button);
+            delBtn.setOnClickListener(v -> {
+                Snackbar.make(itemView, "Are you sure you want to delete this item?", Snackbar.LENGTH_LONG)
+                        .setAction("Yes", v1 -> {
+                            Database.getInstance().removeTask(task);
+                            recyclerViewModel.loadFromDatabase();
+                        })
+                        .show();
             });
         }
 

@@ -2,7 +2,6 @@ package com.example.mobilne2.view.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.SearchView;
@@ -28,7 +27,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,10 +53,6 @@ public class SecondFragment extends Fragment {
 
         Calendar c2 = Calendar.getInstance();
         c2.setTime(recyclerViewModel.getCurrentDay().getValue());
-//        Log.d("lool", c.getTime() + " " + c2.getTime());
-//        Log.d("lool", c.get(Calendar.DAY_OF_MONTH) + " " + c2.get(Calendar.DAY_OF_MONTH));
-//        Log.d("lool", c.get(Calendar.MONTH) + " " + c2.get(Calendar.MONTH));
-//        Log.d("lool", c.get(Calendar.YEAR) + " " + c2.get(Calendar.YEAR));
 
         return c.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH)
                 && c.get(Calendar.MONTH) == c2.get(Calendar.MONTH)
@@ -182,11 +176,10 @@ public class SecondFragment extends Fragment {
 
     private void initRecycler() {
         taskAdapter = new TaskAdapter(new TaskDiffItemCallback(), task -> {
-//            recyclerViewModel.getCurrentDay().setValue(task.getStartTime());
             Intent intent = new Intent(requireActivity(), TaskDetailActivity.class);
             intent.putExtra("task", task);
             startActivity(intent);
-        });
+        }, recyclerViewModel);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(taskAdapter);
     }
