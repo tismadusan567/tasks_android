@@ -23,14 +23,12 @@
             android:id="@+id/task_time_interval"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="9:00 AM - 10:00 AM"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
         <TextView
             android:id="@+id/task_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Task Name"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     </LinearLayout>
@@ -45,7 +43,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit"
-            android:contentDescription="Edit"
             android:background="?android:attr/selectableItemBackgroundBorderless"/>
 
         <ImageButton
@@ -53,7 +50,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_delete"
-            android:contentDescription="Delete"
             android:background="?android:attr/selectableItemBackgroundBorderless"/>
 
     </LinearLayout>

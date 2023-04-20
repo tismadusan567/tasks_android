@@ -15,6 +15,7 @@ public class CalendarDateDiffItemCallback extends DiffUtil.ItemCallback<Calendar
 
     @Override
     public boolean areContentsTheSame(@NonNull CalendarDate oldItem, @NonNull CalendarDate newItem) {
-        return oldItem.getDate().equals(newItem.getDate());
+        return oldItem.getDate().equals(newItem.getDate())
+                && oldItem.getPriority().equals(newItem.getPriority());
     }
 }

@@ -112,8 +112,8 @@ public class AddTaskActivity extends AppCompatActivity {
                 return;
             }
 
-            if (startTime == null || endTime == null) {
-                Toast.makeText(this, "You must select a time", Toast.LENGTH_SHORT).show();
+            if (startTime == null || endTime == null || endTime.before(startTime)) {
+                Toast.makeText(this, "You must select a valid time", Toast.LENGTH_SHORT).show();
                 return;
             }
 

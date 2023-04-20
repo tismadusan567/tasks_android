@@ -12,7 +12,7 @@
         style="@style/FragmentTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DATE"
+        android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,7 +21,7 @@
         android:id="@+id/checkBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Show past obligations"
+        android:text="@string/show_past_obligations"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
@@ -46,8 +46,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/green_button_background"
-            android:textOn="LOW"
-            android:textOff="LOW"
+            android:textOn="@string/low"
+            android:textOff="@string/low"
             />
 
         <ToggleButton
@@ -56,8 +56,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/yellow_button_background"
-            android:textOn="MID"
-            android:textOff="MID"
+            android:textOn="@string/mid"
+            android:textOff="@string/mid"
             />
 
         <ToggleButton
@@ -66,8 +66,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/red_button_background"
-            android:textOn="HIGH"
-            android:textOff="HIGH"
+            android:textOn="@string/high"
+            android:textOff="@string/high"
             />
 
     </LinearLayout>
@@ -89,7 +89,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:contentDescription="Add new obligation"
         android:src="@drawable/floating_add_btn"
         app:layout_constraintBottom_toBottomOf="@+id/listRv"
         app:layout_constraintEnd_toEndOf="parent" />

@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">Mobilne2</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="low">LOW</string>
+    <string name="mid">MID</string>
+    <string name="high">HIGH</string>
+    <string name="pick_start_time">Pick start time</string>
+    <string name="pick_end_time">Pick end time</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="edit_task">Edit task</string>
+    <string name="delete_task">Delete task</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="date">DATE</string>
+    <string name="mon">Mon.</string>
+    <string name="tue">Tue.</string>
+    <string name="wed">Wed.</string>
+    <string name="thu">Thu.</string>
+    <string name="fri">Fri.</string>
+    <string name="sat">Sat.</string>
+    <string name="sun">Sun.</string>
+    <string name="scroll_to_today_s_date">Scroll to today\'s date</string>
+    <string name="show_past_obligations">Show past obligations</string>
+    <string name="change_password">Change password</string>
+    <string name="log_out">Log out</string>
 </resources>
