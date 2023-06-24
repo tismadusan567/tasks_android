@@ -24,24 +24,24 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.splash);
 
         new Handler().postDelayed(() -> {
-            SharedPreferences sharedPreferences = getSharedPreferences("dnevnjak", Context.MODE_PRIVATE);
-
-            String username = sharedPreferences.getString(User.USERNAME,  null);
-            String password = sharedPreferences.getString(User.PASSWORD, null);
-            String email = sharedPreferences.getString(User.EMAIL, null);
-            boolean isLoggedIn = sharedPreferences.getBoolean(User.LOGGEDIN, false);
-
-            if (!isLoggedIn || username == null) {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-                return;
-            }
+//            SharedPreferences sharedPreferences = getSharedPreferences("dnevnjak", Context.MODE_PRIVATE);
+//
+//            String username = sharedPreferences.getString(User.USERNAME,  null);
+//            String password = sharedPreferences.getString(User.PASSWORD, null);
+//            String email = sharedPreferences.getString(User.EMAIL, null);
+//            boolean isLoggedIn = sharedPreferences.getBoolean(User.LOGGEDIN, false);
+//
+//            if (!isLoggedIn || username == null) {
+//                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+//                startActivity(intent);
+//                finish();
+//                return;
+//            }
 
             User user = new User(
-                    username,
-                    password,
-                    email,
+                    "username",
+                    "password",
+                    "email",
                     true
             );
 
@@ -50,6 +50,6 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
 
-        }, 2000);
+        }, 1000);
     }
 }
